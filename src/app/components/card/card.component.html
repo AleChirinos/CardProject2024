@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="background-image"></div>
+  <div class="content">
+    <div class="column">
+      <app-card-front
+        [inputCardNumber]="cardNumber"
+        [inputCardName]="cardName"
+        [inputCardExpiryMM]="cardExpiryMM"
+        [inputCardExpiryYY]="cardExpiryYY">
+      </app-card-front>
+      <app-card-back
+        [inputCardCVC]="cardCVC">
+      </app-card-back>
+    </div>
+    <div class="column--form">
+      <div *ngIf="!submitted">
+        <form (ngSubmit)="onSubmit()" [formGroup]="cardForm">
+          <div class="form-group">
+            <label for="cardName">Cardholder Name</label><br>
+            <input type="text" class="form-control" id="cardName" formControlName="cardName" [(ngModel)]="cardName"
+                   placeholder="e.g. Jane Appleseed"
+                   [ngClass]="{'form-control--error' : cardForm.get('cardName')?.errors && cardForm.get('cardName')?.dirty}">
+            <div *ngIf="cardForm.get('cardName')?.errors && cardForm.get('cardName')?.dirty" class="error-message">
+              <p *ngIf="cardForm.get('cardName')?.hasError('required')"> Cardholder Name is required.</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cardNumber">Card Number</label><br>
+            <input type="text" class="form-control" id="cardNumber" formControlName="cardNumber" [(ngModel)]="cardNumber"
+                   placeholder="e.g. 1234 5678 9123 0000"
+                   [ngClass]="{'form-control--error' : cardForm.get('cardNumber')?.errors && cardForm.get('cardNumber')?.dirty}">
+            <div *ngIf="cardForm.get('cardNumber')?.errors && cardForm.get('cardNumber')?.dirty" class="error-message">
+              <p *ngIf="cardForm.get('cardNumber')?.hasError('required')">Card Number is required.</p>
+              <p *ngIf="cardForm.get('cardNumber')?.hasError('pattern')">Card Number must contain only numbers.</p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Exp. Date (MM/YY)</label><br>
+              <div class="exp-date-group">
+                <input type="text" class="input-date" id="cardExpiryMM" formControlName="cardExpiryMM"
+                       [(ngModel)]="cardExpiryMM" placeholder="MM"
+                       [ngClass]="{'input-date--error' : cardForm.get('cardExpiryMM')?.errors && cardForm.get('cardExpiryMM')?.dirty }">
+                <input type="text" class="input-date" id="cardExpiryYY" formControlName="cardExpiryYY"
+                       [(ngModel)]="cardExpiryYY" name="cardExpiry" placeholder="YY"
+                       [ngClass]="{'input-date--error' : cardForm.get('cardExpiryYY')?.errors && cardForm.get('cardExpiryYY')?.dirty}">
+              </div>
+              <div
+                *ngIf="(cardForm.get('cardExpiryMM')?.errors || cardForm.get('cardExpiryYY')?.errors) && (cardForm.get('cardExpiryMM')?.dirty || cardForm.get('cardExpiryYY')?.dirty)"
+                class="error-message">
+                <p
+                  *ngIf="(cardForm.get('cardExpiryMM')?.hasError('required') && cardForm.get('cardExpiryYY')?.hasError('required'))">
+                  Expiry Date is required.</p>
+                <p
+                  *ngIf="(cardForm.get('cardExpiryMM')?.hasError('pattern') && cardForm.get('cardExpiryYY')?.hasError('pattern'))">
+                  Expiry Date must be valid.</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cardCVC">CVC</label><br>
+              <input type="text" class="input-cvc" id="cardCVC" formControlName="cardCVC" [(ngModel)]="cardCVC"
+                     placeholder="e.g. 123"
+                     [ngClass]="{'input-cvc--error' : cardForm.get('cardCVC')?.errors && cardForm.get('cardCVC')?.dirty}">
+              <div *ngIf="cardForm.get('cardCVC')?.errors && cardForm.get('cardCVC')?.dirty" class="error-message">
+                <p *ngIf="cardForm.get('cardCVC')?.hasError('required')">CVC is required.</p>
+                <p *ngIf="cardForm.get('cardCVC')?.hasError('pattern')">CVC must be have only numbers.</p>
+              </div>
+            </div>
+          </div>
+          <button type="submit" [disabled]="cardForm.invalid">Confirm</button>
+        </form>
+      </div>
+      <div *ngIf="submitted" class="thank-you">
+        <img src="./../../../assets/correct_icon.png">
+        <h2>Thank You!</h2>
+        <p>We've added your card details</p>
+        <button (click)="resetForm()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
